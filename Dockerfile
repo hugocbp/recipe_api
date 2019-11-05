@@ -5,9 +5,13 @@ ENV PYTHONUNBUFFERED 1
 
 # Copy from machine to Docker image
 COPY ./requirements.txt /requirements.txt
+RUN apk add --update --no-cache postgresql-client
+RUN apk add --update --no-cache --virtual .tmp-build-deps \
+		gcc libc-dev linux-headers postgresql-dev
 
 # Install requirements from the file (like Gemfile)
 RUN pip install -r /requirements.txt
+RUN apk del .tmp-build-deps
 
 # Create folder on image, switches to it 
 # and copy from machine to image
